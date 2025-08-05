@@ -10,6 +10,29 @@
     max-width: 400px;
     margin: 0 auto;
     padding: 10px;
+    background: #fafafa;
+  }
+  .chat-container {
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: #fff;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 10px;
+  }
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #005f73;
+    color: white;
+    padding: 10px;
+    border-radius: 15px 15px 0 0;
+  }
+  .chat-header img {
+    height: 40px;
+    width: 40px;
+    object-fit: contain;
   }
   #chatbox {
     border: 1px solid #ccc;
@@ -18,6 +41,7 @@
     padding: 10px;
     margin-bottom: 10px;
     background: #f9f9f9;
+    border-radius: 0 0 15px 15px;
   }
   .message {
     margin-bottom: 12px;
@@ -37,19 +61,39 @@
     flex: 1;
     padding: 8px;
     font-size: 16px;
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #ccc;
+    border-right: none;
   }
   #sendButton {
     padding: 8px 16px;
+    border-radius: 0 4px 4px 0;
+    border: 1px solid #005f73;
+    background-color: #005f73;
+    color: white;
+    cursor: pointer;
+  }
+  #sendButton:hover {
+    background-color: #0a9396;
+    border-color: #0a9396;
   }
 </style>
 </head>
 <body>
-  <h2>LETSknow English Level Chatbot</h2>
+
+<div class="chat-container">
+  <div class="chat-header">
+    <img src="https://yourdomain.com/path-to-logo.png" alt="LETSknow Logo" />
+    <h2>LETSknow CEFR Chatbot</h2>
+  </div>
+
   <div id="chatbox"></div>
+
   <form id="inputForm">
     <input id="inputText" autocomplete="off" placeholder="Type your message..." />
     <button id="sendButton" type="submit">Send</button>
   </form>
+</div>
 
 <script>
   const chatbox = document.getElementById('chatbox');
@@ -93,10 +137,12 @@
     inputText.value = '';
   });
 
-  // Optional: greet the user on page load
+  // Greet user on page load
   window.onload = () => {
     addMessage("Hello! I’m your English Placement Assistant. I’ll ask a few questions to understand your English level. The questions will get a bit harder, so just do your best. Let’s begin!", 'bot');
   };
 </script>
+
 </body>
 </html>
+
