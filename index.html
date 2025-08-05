@@ -100,32 +100,50 @@
   const inputForm = document.getElementById('inputForm');
   const inputText = document.getElementById('inputText');
 
+  // Put your Vercel API URL here (absolute is safer if page and API are on different domains)
+  const API_URL = "https://letsknow-chatbot.vercel.app/api/chat";
+
+  // Conversation history kept client-side and sent to server each turn
+  const conversation = [];
+
   function addMessage(text, sender) {
     const div = document.createElement('div');
-    div.classList.add('message');
-    div.classList.add(sender);
-    div.textContent = text;
+    div.classList.add('message', sender);
+    const p = document.createElement('p');
+    p.textContent = text;
+    div.appendChild(p);
     chatbox.appendChild(div);
     chatbox.scrollTop = chatbox.scrollHeight;
   }
 
-  async function sendMessage(message) {
-    addMessage(message, 'user');
+  async function sendMessageToServer(userText) {
+    // show user's message immediately
+    addMessage(userText, 'user');
+    conversation.push({ role: 'user', content: userText });
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({ history: conversation })
       });
-      const data = await response.json();
-      if (data.reply) {
-        addMessage(data.reply, 'bot');
-      } else {
-        addMessage('Sorry, no response from chatbot.', 'bot');
+
+      if (!response.ok) {
+        console.error('Server returned error', response.status);
+        addMessage('Sorry — the chat service returned an error. Please try again later.', 'bot');
+        return;
       }
-    } catch (error) {
-      addMessage('Error communicating with chatbot.', 'bot');
+
+      const data = await response.json();
+      const botReply = data.reply || data.error || "Sorry, no response from chatbot.";
+
+      // add assistant reply to UI and history
+      conversation.push({ role: 'assistant', content: botReply });
+      addMessage(botReply, 'bot');
+
+    } catch (err) {
+      console.error('Error communicating with chatbot:', err);
+      addMessage('Error communicating with chatbot. Please try again later.', 'bot');
     }
   }
 
@@ -133,13 +151,13 @@
     e.preventDefault();
     const message = inputText.value.trim();
     if (!message) return;
-    sendMessage(message);
+    sendMessageToServer(message);
     inputText.value = '';
   });
 
-  // Greet user on page load
+  // Optional initial friendly message (UI only)
   window.onload = () => {
-    addMessage("Hi there! I’m here to help you discover your English skills. We’ll chat through some fun questions, so don’t worry, just take your time and be yourself. Ready to get started?", 'bot');
+    addMessage("Hi there! I’m here to help you discover your English skills. When you're ready, tell me your name to begin.", 'bot');
   };
 </script>
 
