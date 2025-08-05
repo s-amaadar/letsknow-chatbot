@@ -1,0 +1,49 @@
+// server.js
+import express from "express";
+import cors from "cors";
+import { Configuration, OpenAIApi } from "openai";
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Setup OpenAI client
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
+
+// Chat endpoint
+app.post("/chat", async (req, res) => {
+  try {
+    const userMessage = req.body.message;
+    if (!userMessage) {
+      return res.status(400).json({ error: "No message provided" });
+    }
+
+    // Call OpenAI Chat Completion
+    const completion = await openai.createChatCompletion({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "You are a friendly English placement assistant for LETSknow." },
+        { role: "user", content: userMessage },
+      ],
+      max_tokens: 500,
+    });
+
+    const botReply = completion.data.choices[0].message.content;
+
+    res.json({ reply: botReply });
+  } catch (error) {
+    console.error("OpenAI API error:", error);
+    res.status(500).json({ error: "Failed to get response from OpenAI" });
+  }
+});
+
+// Start server
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
