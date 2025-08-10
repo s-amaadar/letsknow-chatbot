@@ -2,6 +2,7 @@
   "name": "letsknow-chatbot",
   "version": "1.0.0",
   "description": "LETSknow English placement chatbot backend",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -12,3 +13,4 @@
     "openai": "^4.7.1"
   }
 }
+
