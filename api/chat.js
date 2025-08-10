@@ -13,6 +13,14 @@ function parseCookies(cookieHeader = "") {
   }, {});
 }
 
+// Simple cache for common questions
+const cachedReplies = {
+  "hello": "Hello! I’m your English Assistant. I’ll ask a few friendly questions to understand your English level.",
+  "hi": "Hi there! Ready to test your English skills? Let's get started.",
+  "help": "I’m here to help you assess your English level. Just type your message and I'll guide you.",
+  // Add more common phrases and their canned replies here
+};
+
 /**
  * The 4 test version blocks. Keep them short (each is a string).
  * We inject only the selectedVersionText into the system prompt so the model uses that set.
@@ -98,6 +106,16 @@ export default async function handler(req, res) {
     // Accept either a "history" array of messages or a single "message"
     // Recommended: frontend should send "history": [{role:'user'|'assistant', content: '...'}, ...]
     const { history, message } = req.body ?? {};
+    
+// Get the user's latest message text in lowercase for simple matching
+const userMessage = (Array.isArray(history) && history.length > 0)
+  ? history[history.length - 1].content.toLowerCase().trim()
+  : (message || "").toLowerCase().trim();
+
+if (cachedReplies[userMessage]) {
+  if (setCookieHeader) res.setHeader("Set-Cookie", setCookieHeader);
+  return res.status(200).json({ reply: cachedReplies[userMessage] });
+}
 
     let messages = [{ role: "system", content: buildSystemPrompt(versionText) }];
 
@@ -145,5 +163,6 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Server error" });
   }
 }
+
 
 
