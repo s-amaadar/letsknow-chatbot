@@ -68,99 +68,98 @@
   #sendButton {
     padding: 8px 16px;
     border-radius: 0 4px 4px 0;
-    border: 1px solid #314259;
+    border: 1px solid #ccc;
     background-color: #314259;
     color: white;
     cursor: pointer;
   }
-  #sendButton:hover {
-    background-color: #0a9396;
-    border-color: #0a9396;
+  #sendButton:disabled {
+    background-color: #888;
+    cursor: not-allowed;
+  }
+  #typingIndicator {
+    font-style: italic;
+    color: #555;
+    margin-bottom: 10px;
+    min-height: 20px;
   }
 </style>
 </head>
 <body>
-
-<div class="chat-container">
-  <div class="chat-header">
-    <img src="http://letsknowtutors.com/wp-content/uploads/2024/11/Logo-no-strap-on-light.png" alt="LETSknow Logo" />
-    <h2>Test Your English Level</h2>
+  <div class="chat-container">
+    <div class="chat-header">
+      <img src="https://letsknow.ca/wp-content/uploads/2023/05/LETSknow-logo-dark-blue.png" alt="LETSknow Logo" />
+      <h2>English Placement Assistant</h2>
+    </div>
+    <div id="chatbox"></div>
+    <div id="typingIndicator"></div>
+    <form id="inputForm">
+      <input type="text" id="inputText" placeholder="Type your message..." autocomplete="off" required />
+      <button type="submit" id="sendButton">Send</button>
+    </form>
   </div>
-
-  <div id="chatbox"></div>
-
-  <form id="inputForm">
-    <input id="inputText" autocomplete="off" placeholder="Type your message..." />
-    <button id="sendButton" type="submit">Send</button>
-  </form>
-</div>
 
 <script>
   const chatbox = document.getElementById('chatbox');
   const inputForm = document.getElementById('inputForm');
   const inputText = document.getElementById('inputText');
+  const sendButton = document.getElementById('sendButton');
+  const typingIndicator = document.getElementById('typingIndicator');
 
-  // Put your Vercel API URL here (absolute is safer if page and API are on different domains)
-  const API_URL = "https://letsknow-chatbot.vercel.app/api/chat";
-
-  // Conversation history kept client-side and sent to server each turn
+  // Keep conversation history for context
   const conversation = [];
 
-  function addMessage(text, sender) {
-    const div = document.createElement('div');
-    div.classList.add('message', sender);
-    const p = document.createElement('p');
-    p.textContent = text;
-    div.appendChild(p);
-    chatbox.appendChild(div);
+  function addMessage(content, sender) {
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('message', sender);
+    msgDiv.textContent = content;
+    chatbox.appendChild(msgDiv);
     chatbox.scrollTop = chatbox.scrollHeight;
   }
 
-  async function sendMessageToServer(userText) {
-    // show user's message immediately
-    addMessage(userText, 'user');
-    conversation.push({ role: 'user', content: userText });
+  async function sendMessage(message) {
+    addMessage(message, 'user');
+    conversation.push({ role: 'user', content: message });
+
+    sendButton.disabled = true;
+    typingIndicator.textContent = "Bot is typing...";
 
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ history: conversation })
       });
 
       if (!response.ok) {
-        console.error('Server returned error', response.status);
-        addMessage('Sorry — the chat service returned an error. Please try again later.', 'bot');
-        return;
+        throw new Error(`Server error: ${response.status}`);
       }
 
       const data = await response.json();
-      const botReply = data.reply || data.error || "Sorry, no response from chatbot.";
+      const reply = data.reply;
 
-      // add assistant reply to UI and history
-      conversation.push({ role: 'assistant', content: botReply });
-      addMessage(botReply, 'bot');
+      addMessage(reply, 'bot');
+      conversation.push({ role: 'assistant', content: reply });
 
     } catch (err) {
-      console.error('Error communicating with chatbot:', err);
-      addMessage('Error communicating with chatbot. Please try again later.', 'bot');
+      addMessage("Error communicating with chatbot. Please try again later.", 'bot');
+      console.error(err);
+    } finally {
+      typingIndicator.textContent = "";
+      sendButton.disabled = false;
+      inputText.value = "";
+      inputText.focus();
     }
   }
 
-  inputForm.addEventListener('submit', e => {
+  inputForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const message = inputText.value.trim();
-    if (!message) return;
-    sendMessageToServer(message);
-    inputText.value = '';
+    if (message) {
+      sendMessage(message);
+    }
   });
-
-  // Optional initial friendly message (UI only)
-  window.onload = () => {
-    addMessage("Hi there! I’m here to help you discover your English skills. When you're ready, tell me your name to begin.", 'bot');
-  };
 </script>
-
 </body>
 </html>
 
