@@ -111,19 +111,37 @@ export default async function handler(req, res) {
     }
 
     // Call OpenAI
-// --- Temporary mock response for testing (no OpenAI call) ---
-const mockReply = `Hello! I’m your English Placement Assistant. 
-I’ll ask a few friendly questions to understand your English level. 
-First — what is your full name and why are you learning English?`;
+    const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages,
+        max_tokens: 800,
+        temperature: 0.6
+      })
+    });
 
-return res.status(200).json({ reply: mockReply });
-// --- End mock response ---
+    if (!openaiRes.ok) {
+      const txt = await openaiRes.text();
+      console.error("[api/chat] OpenAI error:", openaiRes.status, txt);
+      if (setCookieHeader) res.setHeader("Set-Cookie", setCookieHeader);
+      return res.status(502).json({ error: "AI service error", details: txt });
+    }
+
+    const data = await openaiRes.json();
+    const reply = data.choices?.[0]?.message?.content ?? "I couldn't generate a response.";
 
     // Return reply and set cookie if newly created
     if (setCookieHeader) res.setHeader("Set-Cookie", setCookieHeader);
     return res.status(200).json({ reply });
+
   } catch (err) {
     console.error("[api/chat] exception:", err);
     return res.status(500).json({ error: "Server error" });
   }
 }
+
