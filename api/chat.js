@@ -59,7 +59,8 @@ Rules:
 - Use ONLY the test questions from the chosen version for the whole session.
 - Do NOT display CEFR labels while asking; ask conversationally.
 - Include a short writing prompt (4–6 sentences) and an optional speaking prompt before finalizing the level.
-- Be generous and supportive: minor errors should not lower the level if communication is fluent.
+- Be very generous and supportive: do not penalize minor or occasional mistakes, especially from fluent or native speakers.
+- When uncertain between levels, always assign the higher level.
 - If user asks unrelated questions (visas, immigration, IELTS, TOEFL, study abroad, general information), use the fallback (see below) and invite them to book a LETSknow advisor.
 
 Fallback:
@@ -144,4 +145,5 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Server error" });
   }
 }
+
 
