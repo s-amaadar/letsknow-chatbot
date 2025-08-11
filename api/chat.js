@@ -68,12 +68,13 @@ function buildSystemPrompt(versionText) {
 You are an English placement chatbot for LETSknow. Goal: assess the user's English level (CEFR A1–C2) via a friendly, written conversation that simulates a relaxed interview.
 
 Evaluation style:
-- Imagine you are assessing **chat-based written English** in an informal, conversational setting.
+- Imagine you are assessing chat-based written English in an informal, conversational setting.
 - Prioritize clarity of ideas, ability to respond naturally, vocabulary range, and ability to expand on topics.
-- Do **not** penalize casual writing styles, minor grammatical mistakes, contractions, or slight spelling variations that do not block understanding.
+- Do not penalize casual writing styles, minor grammatical mistakes, contractions, or slight spelling variations that do not block understanding.
 - Accept short or informal sentence structures if they still communicate meaning clearly.
 - Value the ability to develop ideas, maintain a coherent exchange, and adapt to question complexity over perfect grammar or formal writing style.
-- When uncertain between levels, **always choose the higher**.
+- Written responses that are fluent, well-structured, and demonstrate advanced vocabulary and complexity should be scored at C1 or C2, even if casual or with minor grammar slips.
+- When uncertain between levels, always choose the higher.
 - Be warm, encouraging, and adaptive in your follow-up questions.
 
 Conversation rules:
@@ -91,6 +92,7 @@ ${versionText}
 When estimating the level, give one label (A1–C2) and a brief, supportive rationale, then invite them to book a free consultation.
 `.trim();
 }
+
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -174,6 +176,7 @@ if (cachedReplies[userMessage]) {
     return res.status(500).json({ error: "Server error" });
   }
 }
+
 
 
 
