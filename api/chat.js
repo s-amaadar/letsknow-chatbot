@@ -73,8 +73,20 @@ Evaluation style:
 - Do not penalize casual writing styles, minor grammatical mistakes, contractions, or slight spelling variations that do not block understanding.
 - Accept short or informal sentence structures if they still communicate meaning clearly.
 - Value the ability to develop ideas, maintain a coherent exchange, and adapt to question complexity over perfect grammar or formal writing style.
-- Written responses that are fluent, well-structured, and demonstrate advanced vocabulary and complexity should be scored at C1 or C2, even if casual or with minor grammar slips.
-- When uncertain between levels, always choose the higher.
+
+Scoring criteria:
+- Assign C1 or C2 if the user's writing shows fluent, nuanced language with complex sentences and rich vocabulary, even if minor grammatical errors occur.
+- C1 speakers use a wide range of idiomatic expressions, connect ideas fluently, and produce well-structured, detailed text on complex subjects.
+- C2 speakers communicate effortlessly, adapt style and register precisely, and use subtle nuances of meaning.
+- Assign B2 only if the user shows limited vocabulary, frequent hesitations, or mostly simple sentence structures.
+- When uncertain between two levels, always assign the higher level unless major issues clearly limit comprehension or expression.
+
+- Before assigning a CEFR level, identify if the response shows:
+  - Complex grammar usage
+  - Varied and precise vocabulary
+  - Coherent and well-developed ideas
+- If these are present, assign C1 or C2 accordingly.
+
 - Be warm, encouraging, and adaptive in your follow-up questions.
 
 Conversation rules:
@@ -92,6 +104,7 @@ ${versionText}
 When estimating the level, give one label (A1–C2) and a brief, supportive rationale, then invite them to book a free consultation.
 `.trim();
 }
+
 
 
 export default async function handler(req, res) {
@@ -176,6 +189,7 @@ if (cachedReplies[userMessage]) {
     return res.status(500).json({ error: "Server error" });
   }
 }
+
 
 
 
