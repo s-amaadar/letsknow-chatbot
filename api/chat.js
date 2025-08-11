@@ -27,33 +27,36 @@ const cachedReplies = {
  */
 const VERSIONS = {
   1: `Version 1
-A1: Where do you live? / What is your favourite colour or food?
-A2: What do you usually do on the weekend? / Can you describe your family or a friend?
-B1: What was the last book or movie you enjoyed, and why? / Tell me about a typical day at work or school.
-B2: What makes someone a good leader? / Describe a problem you faced and how you solved it.
-C1: Do you agree or disagree: "Technology is making us less social"? Why? / How would you compare education in your country to education in Canada?
-C2: What are the long-term effects of globalization? / Explain a controversial issue in your country and your opinion.`,
+A1: Where do you live, and what do you like most about it? / What is your favourite colour or food, and why do you like it?
+A2: What do you usually do on the weekend? / Can you describe your family or a friend, and what makes them special?
+B1: What was the last book or movie you enjoyed, and what made it interesting for you? / Tell me about a typical day at work or school, including the parts you enjoy most.
+B2: What makes someone a good leader in your opinion? / Describe a problem you faced and explain how you solved it.
+C1: Do you agree or disagree: "Technology is making us less social"? Give reasons for your opinion. / How would you compare education in your country to education in Canada, with examples.
+C2: What are the long-term effects of globalization in your view? / Explain a controversial issue in your country and share your perspective.`,
+  
   2: `Version 2
-A1: What city or town are you from? / What is your favourite season or holiday?
-A2: What do you like to do after school or work? / Describe a family member or a friend.
-B1: Tell me about a recent trip or vacation you enjoyed. / What is a typical day like for you?
-B2: What qualities make a good teacher or mentor? / Talk about a challenge you have faced and how you dealt with it.
-C1: Do you think social media helps or hurts communication? Why? / Compare the education system in your country with Canada’s.
-C2: What are some effects of climate change worldwide? / Discuss a current event in your country and your thoughts about it.`,
+A1: What city or town are you from, and what is it known for? / What is your favourite season or holiday, and what do you usually do then?
+A2: What do you like to do after school or work, and why? / Describe a family member or friend and tell me about a time you enjoyed together.
+B1: Tell me about a recent trip or vacation you enjoyed — what made it memorable? / What is a typical day like for you, from morning to evening?
+B2: What qualities make a good teacher or mentor? / Talk about a challenge you faced and how you dealt with it.
+C1: Do you think social media helps or hurts communication? Give examples. / Compare the education system in your country with Canada’s, mentioning key differences.
+C2: What are some effects of climate change worldwide? / Discuss a current event in your country and what you think about it.`,
+  
   3: `Version 3
-A1: Where is your home? / What food or color do you like best?
-A2: What do you do on weekends? / Describe a friend or family member.
-B1: What book or movie did you like recently? Why? / Describe your usual day.
-B2: What makes a person a good leader? / Tell me about a problem you solved.
-C1: Do you agree that technology makes people less social? Why or why not? / How is education different in your country versus Canada?
-C2: What are the impacts of globalization? / Talk about a controversial topic in your country and your view.`,
+A1: Where is your home, and what do you like most about living there? / What food or colour do you like best, and why?
+A2: What do you usually do on weekends, and who do you spend them with? / Describe a friend or family member and what makes them important to you.
+B1: What book or movie did you like recently, and what was special about it? / Describe your usual day, including something you look forward to.
+B2: What makes a person a good leader, in your opinion? / Tell me about a problem you solved and how you approached it.
+C1: Do you agree that technology makes people less social? Why or why not? / How is education different in your country compared to Canada, with examples.
+C2: What are the impacts of globalization today and in the future? / Talk about a controversial topic in your country and your view on it.`,
+  
   4: `Version 4
-A1: What city do you live in? / What is your favourite color or food?
-A2: What activities do you enjoy on weekends? / Can you describe a family member or friend?
-B1: What was the last movie or book you liked? Why? / Describe a typical day at your work or school.
-B2: What makes a good leader? / Describe a challenge you overcame.
-C1: Do you agree or disagree that technology is making us less social? Why? / How would you compare your country’s education system with Canada’s?
-C2: What are the effects of globalization in the long term? / Explain a controversial issue in your country and your opinion.`
+A1: What city do you live in, and what is your favourite thing about it? / What is your favourite colour or food, and why do you like it?
+A2: What activities do you enjoy on weekends, and how did you get interested in them? / Can you describe a family member or friend and something you have done together?
+B1: What was the last movie or book you liked, and why did you enjoy it? / Describe a typical day at your work or school, with a detail that makes it unique.
+B2: What makes a good leader, and can you give an example of one? / Describe a challenge you overcame and how you did it.
+C1: Do you agree or disagree that technology is making us less social? Explain. / How would you compare your country’s education system with Canada’s, using examples.
+C2: What are the long-term effects of globalization for people and businesses? / Explain a controversial issue in your country and your opinion on it.`
 };
 
 /**
@@ -171,6 +174,7 @@ if (cachedReplies[userMessage]) {
     return res.status(500).json({ error: "Server error" });
   }
 }
+
 
 
 
